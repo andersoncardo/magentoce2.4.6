@@ -1,48 +1,30 @@
-<h1>list5</h1>
 <div class="toolbar toolbar-products range">
-    <div class="modes">
-        <label class="label" for="low-range">Low Range</label>
-        <input type="text" class="input-text" id="low-range" data-bind="value: lowRange" />
-    </div>
-    <div class="modes">
-        <label class="label" for="high-range">High Range</label>
-        <input type="text" class="input-text" id="high-range" data-bind="value: highRange" />
-        <div class="message error" data-bind="text: highRangeErrorMessage, visible: highRangeErrorMessage() !== ''"></div>
-
-    </div>
-
-    <div class="modes">
-        <label class="sorter-label" for="sort-by-price">Sort By</label>
-        <div class="field">
-            <select id="sort-by-price" data-bind="value: sortByPrice">
-                <option value="ascending">Ascending</option>
-                <option value="descending">Descending</option>
-            </select>
+    <form data-role="save"
+          data-bind="submit:search"
+          method="post">
+        <div class="modes">
+            <label class="label" for="low-range">Low Range</label>
+            <input type="text" class="input-text" id="low-range" name="low-range" data-bind="value: lowRange" />
         </div>
-    </div>
-    <div class="modes">
-        <button type="button" class="action primary" data-bind="click: sortByPriceClick">search</button>
-    </div>
+        <div class="modes">
+            <label class="label" for="high-range">High Range</label>
+            <input type="text" class="input-text" id="high-range" name="high-range" data-bind="value: highRange" />
+            <div class="message " data-bind="text: highRangeErrorMessage, visible: highRangeErrorMessage() !== ''"></div>
+
+        </div>
+        <div class="modes">
+            <label class="sorter-label" for="sort-by-price">Sort By</label>
+            <div class="field">
+                <select id="sort-by-price" name="sort-by-price"  data-bind="value: sortByPrice">
+                    <option value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
+                </select>
+            </div>
+        </div>
+        <div class="modes">
+            <button type="submit" class="action primary" >search</button>
+        </div>
+    </form>
 
 </div>
-
-<!--<div class="range">-->
-<!--    <div class="field">-->
-<!--        <label class="label" for="low-range">Low Range</label>-->
-<!--        <input type="text" class="input-text" id="low-range" data-bind="value: lowRange" />-->
-<!--    </div>-->
-<!--    <div class="field">-->
-<!--        <label class="label" for="high-range">High Range</label>-->
-<!--        <input type="text" class="input-text" id="high-range" data-bind="value: highRange" />-->
-<!--       // <div class="message error" data-bind="text: highRangeErrorMessage, visible: highRangeErrorMessage() !== ''"></div>-->
-<!--    </div>-->
-<!--    <div class="field">-->
-<!--        <label class="label" for="sort-by-price">Sort By Price</label>-->
-<!--        <select id="sort-by-price" data-bind="value: sortByPrice">-->
-<!--            <option value="ascending">Ascending</option>-->
-<!--            <option value="descending">Descending</option>-->
-<!--        </select>-->
-<!--    </div>-->
-<!--    <button type="button" class="action primary" data-bind="click: sortByPriceClick">Sort</button>-->
-<!--</div>-->
 

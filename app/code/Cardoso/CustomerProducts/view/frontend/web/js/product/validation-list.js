@@ -4,10 +4,9 @@ define([
         'mage/validation',
         'ko',
         'Cardoso_CustomerProducts/js/product/request_list',
-    ], function ($, Component, validation, ko, saveAction) {
+    ], function ($, Component, validation, ko, request) {
         'use strict';
-        const totalCustomer = ko.observableArray([]);
-
+        const products = ko.observableArray([]);
         return Component.extend({
             defaults: {
                 template: 'Cardoso_CustomerProducts/product_list/item',
@@ -20,44 +19,41 @@ define([
             initialize: function () {
                 this._super();
             },
-            save: function (saveForm) {
+            search: function (data) {
                 const self = this;
                 const saveData = {},
-                    formDataArray = $(saveForm).serializeArray();
+                    formDataArray = $(data).serializeArray();
 
                 formDataArray.forEach(function (entry) {
                     saveData[entry.name] = entry.value;
                 });
 
-                if ($(saveForm).validation()
-                    && $(saveForm).validation('isValid')
+                if ($(data).validation()
+                    && $(data).validation('isValid')
+                    && this.validateRequisites()
                 ) {
-                    // saveAction(saveData, totalCustomer).always(function() {
-                    //     console.log(totalCustomer());
-                    // });
+                    request(saveData, products).always(function() {
+                        console.log(products());
+                    });
                 }
             },
-            validateHighRange: function(value) {
-                var low = parseFloat(this.lowRange);
-                if (isNaN(value) || value <= low || value > low * 5) {
-                    return false;
-                }
-                return true;
-            },
-            clearHighRange: function() {
-
-            },
-            getError: function () {
-                return totalCustomer;
-            },
-            sortByPriceClick: function() {
+            validateRequisites: function() {
                 const low = parseFloat(this.lowRange);
                 const high = parseFloat(this.highRange);
                 if (!isNaN(low) && !isNaN(high) && this.validateHighRange(high)) {
                     this.highRangeErrorMessage('');
+                    return true;
                 } else {
                     this.highRangeErrorMessage('Enter the High Range value (maximum ' + low * 5 +'):')
+                    return false;
                 }
+            },
+            validateHighRange: function(value) {
+                const low = parseFloat(this.lowRange);
+                if (isNaN(value) || value <= low || value > low * 5) {
+                    return false;
+                }
+                return true;
             }
         });
     }

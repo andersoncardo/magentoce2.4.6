@@ -13,17 +13,17 @@ define(
         $t
     ) {
         'use strict';
-        return function (customerData, totalCustomer) {
+        return function (payload, products) {
             return storage.post(
-                'knockout/ajax/save',
-                JSON.stringify(customerData),
+                'customer/product/search',
+                JSON.stringify(payload),
                 false
             ).done(
                 function (response) {
                     if (response) {
-                        totalCustomer([]);
+                        products([]);
                         $.each(response, function (i, v) {
-                            totalCustomer.push(v);
+                            products.push(v);
                         });
                     }
                 }
