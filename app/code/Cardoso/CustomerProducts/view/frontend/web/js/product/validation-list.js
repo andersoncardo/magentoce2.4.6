@@ -15,7 +15,9 @@ define([
                 sortByPrice: 'ascending',
                 highRangeErrorMessage: ko.observable(),
             },
-
+            getProducts: function () {
+                return products();
+            },
             initialize: function () {
                 this._super();
             },
@@ -32,28 +34,30 @@ define([
                     && $(data).validation('isValid')
                     && this.validateRequisites()
                 ) {
-                    request(saveData, products).always(function() {
-                        console.log(products());
-                    });
+                    request(saveData, products).always(function () {
+                            return products()
+                        }
+                    );
                 }
             },
-            validateRequisites: function() {
+            validateHighRange: function (value) {
+                const low = parseFloat(this.lowRange);
+                if (isNaN(value) || value <= low || value > low * 5) {
+                    return false;
+                }
+
+                return true;
+            },
+            validateRequisites: function () {
                 const low = parseFloat(this.lowRange);
                 const high = parseFloat(this.highRange);
                 if (!isNaN(low) && !isNaN(high) && this.validateHighRange(high)) {
                     this.highRangeErrorMessage('');
                     return true;
                 } else {
-                    this.highRangeErrorMessage('Enter the High Range value (maximum ' + low * 5 +'):')
+                    this.highRangeErrorMessage('Enter the High Range value (maximum ' + low * 5 + '):')
                     return false;
                 }
-            },
-            validateHighRange: function(value) {
-                const low = parseFloat(this.lowRange);
-                if (isNaN(value) || value <= low || value > low * 5) {
-                    return false;
-                }
-                return true;
             }
         });
     }

@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Cardoso\CustomerProducts\Controller\Product;
 
+use Cardoso\CustomerProducts\Api\Data\ProductRangeInterface;
+use Cardoso\CustomerProducts\Api\Data\ProductRangeInterfaceFactory;
+use Cardoso\CustomerProducts\Model\Products\ProductList;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
@@ -13,23 +16,28 @@ class Search implements HttpPostActionInterface
     private Json $jsonHelper;
     private JsonFactory $resultJsonFactory;
     private Context $context;
-    private \Cardoso\CustomerProducts\Model\Products\Results $productSearchResults;
+    private ProductList $productSearchResults;
+    private ProductRangeInterfaceFactory $productRangeInterfaceFactory;
 
     /**
      * @param Json $jsonHelper
      * @param JsonFactory $resultJsonFactory
      * @param Context $context
+     * @param ProductList $results
+     * @param ProductRangeInterfaceFactory $productRangeInterfaceFactory
      */
     public function __construct(
-        Json $jsonHelper,
-        JsonFactory $resultJsonFactory,
-        Context $context,
-        \Cardoso\CustomerProducts\Model\Products\Results $results
+        Json                         $jsonHelper,
+        JsonFactory                  $resultJsonFactory,
+        Context                      $context,
+        ProductList                  $results,
+        ProductRangeInterfaceFactory $productRangeInterfaceFactory
     ) {
         $this->jsonHelper = $jsonHelper;
         $this->resultJsonFactory = $resultJsonFactory;
         $this->context = $context;
         $this->productSearchResults = $results;
+        $this->productRangeInterfaceFactory = $productRangeInterfaceFactory;
     }
 
     public function execute()
@@ -44,39 +52,41 @@ class Search implements HttpPostActionInterface
         }
 
         $data = json_decode($content);
-        if (!$this->validateRequest($data)) {
+        $request =  $this->validateRequest($data);
+        if (empty($request->getData())) {
             return $resultJson->setJsonData(
                 $this->jsonHelper->serialize($responseData)
             );
         }
 
         try {
-            $results = $this->productSearchResults->getProducts($data);
-            $responseData['message'] =   __('email has been subscribed successfully');
-            $responseData['body'] = $results;
+            $results = $this->productSearchResults->getProducts($request);
+            $responseData = $results;
         } catch (\Exception $e) {
-            $responseData['message'] =   __('error:' . $e->getMessage());
-            $responseData['body'] = [];
         }
 
         return $resultJson->setJsonData(
             $this->jsonHelper->serialize($responseData)
         );
-
     }
 
     /**
      * @param mixed $data
-     * @return bool
+     * @return ProductRangeInterface
      */
-    public function validateRequest(Object $data): bool
+    public function validateRequest(Object $data): ProductRangeInterface
     {
-        if (!property_exists($data, 'low-range')
-            || !property_exists($data, 'high-range')
-            || !property_exists($data, 'sort-by-price')) {
-            return false;
+        $productRange = $this->productRangeInterfaceFactory->create();
+        if (!property_exists($data, 'lowRange')
+            || !property_exists($data, 'highRange')
+            || !property_exists($data, 'sortByPrice')) {
+            return $productRange;
         }
 
-        return true;
+        $productRange = $this->productRangeInterfaceFactory->create();
+        $productRange->setLowRange((float)$data->lowRange);
+        $productRange->setHighRange((float)$data->highRange);
+        $productRange->setSortByPrice($data->sortByPrice);
+        return $productRange;
     }
 }
