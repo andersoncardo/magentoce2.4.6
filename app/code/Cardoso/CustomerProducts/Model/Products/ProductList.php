@@ -9,10 +9,12 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Helper\Image;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Type;
+use Magento\CatalogInventory\Model\Stock\StockItemRepository;
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
 {
@@ -21,6 +23,7 @@ class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
     protected SearchCriteriaBuilder $searchCriteriaBuilder;
     protected SortOrderBuilder $sortOrderBuilder;
     protected Image $image;
+    protected StockItemRepository $stockItemRepository;
 
     /**
      * @param ProductRepositoryInterface $productRepository
@@ -28,24 +31,27 @@ class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param SortOrderBuilder $sortOrderBuilder
      * @param Image $image
+     * @param StockItemRepository $stockItemRepository
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
         Status $productStatus,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder,
-        Image $image
+        Image $image,
+        StockItemRepository $stockItemRepository
     ) {
         $this->productRepository = $productRepository;
         $this->productStatus = $productStatus;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->image = $image;
+        $this->stockItemRepository = $stockItemRepository;
     }
 
     public function getProducts(ProductRangeInterface $productRange): array
     {
-        $sortOrder = $this->sortOrderBuilder->setField('position')
+        $sortOrder = $this->sortOrderBuilder->setField('price')
             ->setDirection($productRange->getSortByPrice())
             ->create();
         $searchCriteria = $this->getCriteria($productRange, $sortOrder);
@@ -56,17 +62,19 @@ class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
     /**
      * @param array $items
      * @return array
+     * @throws NoSuchEntityException
      */
     public function getResponse(array $items): array
     {
         $responseData = [];
         foreach ($items as $item) {
             $mageUrl = $this->image->init($item, 'product_thumbnail_image')->getUrl();
+            $stock = $this->stockItemRepository->get($item->getId());
             $responseData[] = [
                 'sku' => $item->getSku(),
                 'price'=> $item->getPrice(),
                 'image' => $mageUrl,
-                'quantity' => $item->getQty(),
+                'quantity' => $stock->getQty(),
                 'description' => $item->getName(),
                 'link' => $item->getProductUrl()
             ];
