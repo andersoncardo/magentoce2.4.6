@@ -15,6 +15,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Pricing\Helper\Data;
 
 class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
 {
@@ -33,6 +34,7 @@ class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
      * @param SortOrderBuilder $sortOrderBuilder
      * @param Image $image
      * @param StockItemRepository $stockItemRepository
+     * @param Data $price
      */
     public function __construct(
         ProductRepositoryInterface $productRepository,
