@@ -1,15 +1,22 @@
 {
   "name": "cardoso/module-customer-products",
-  "version": "1.0.0",
-  "description": "N/A",
-  "type": "magento2-module",
+  "description": "Magento 2 module",
   "require": {
-    "magento/framework": "*",
-    "magento/module-catalog": "104.0.*",
-    "magento/module-customer": "103.0.*"
+    "php": "^7.0.0 || ^8.0"
   },
+  "type": "magento2-module",
+  "version": "2.0.0",
   "license": [
-    "Proprietary"
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Anderson Cardoso",
+      "email": "andersoncardo@gmail.com",
+      "homepage": "https://www.linkedin.com/in/andersoncardo/",
+      "role": "Leader"
+    }
   ],
   "autoload": {
     "files": [
