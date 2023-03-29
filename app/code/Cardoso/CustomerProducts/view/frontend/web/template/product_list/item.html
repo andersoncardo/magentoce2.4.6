@@ -1,0 +1,62 @@
+<div class="toolbar toolbar-products range">
+    <form data-role="save"
+          data-bind="submit:search"
+          method="post">
+        <div class="modes">
+            <label class="label" for="low-range">Low Range</label>
+            <input type="text" class="input-text" id="lowRange" name="lowRange" data-bind="value: lowRange" />
+        </div>
+        <div class="modes">
+            <label class="label" for="high-range">High Range</label>
+            <input type="text" class="input-text" id="highRange" name="highRange" data-bind="value: highRange" />
+            <div class="message " data-bind="text: highRangeErrorMessage, visible: highRangeErrorMessage() !== ''"></div>
+
+        </div>
+        <div class="modes">
+            <label class="sorter-label" for="sort-by-price">Sort By</label>
+            <div class="field">
+                <select id="sortByPrice" name="sortByPrice"  data-bind="value: sortByPrice">
+                    <option value="ASC">Ascending</option>
+                    <option value="DESC">Descending</option>
+                </select>
+            </div>
+        </div>
+        <div class="modes">
+            <button type="submit" class="action primary" >Filter</button>
+        </div>
+    </form>
+</div>
+<div class="table-wrapper orders-history">
+    <table class="data table table-order-items history" id="my-orders-table">
+        <caption class="table-caption">products</caption>
+        <thead>
+        <tr>
+            <th scope="col" data-bind="i18n: 'Image'" class="col id"></th>
+            <th scope="col" data-bind="i18n: 'description'" class="col date"></th>
+            <th scope="col" data-bind="i18n: 'price'" class="col date"></th>
+            <th scope="col" data-bind="i18n: 'quantity'" class="col date"></th>
+            <th scope="col" data-bind="i18n: 'sku'" class="col status"></th>
+            <th scope="col" data-bind="i18n: 'link'" class="col actions"></th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach: getProducts()">
+        <tr>
+            <td class="col id">
+                <img data-bind="attr: { src: image }" />
+            </td>
+            <td class="col total" data-bind="text: description"></td>
+            <td class="col total" data-bind="text: price"></td>
+            <td class="col total" data-bind="text: quantity"></td>
+            <td class="col status" data-bind="text: sku"></td>
+            <td  class="col actions">
+                <div class="secondary">
+                    <a class="action " data-bind="attr: { href: link }">
+                        <span data-bind="i18n: 'see'"></span>
+                    </a>
+                </div>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
