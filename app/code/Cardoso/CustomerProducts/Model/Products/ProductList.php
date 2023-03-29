@@ -18,12 +18,13 @@ use Magento\Framework\Exception\NoSuchEntityException;
 
 class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
 {
-    protected ProductRepositoryInterface $productRepository;
-    protected Status $productStatus;
-    protected SearchCriteriaBuilder $searchCriteriaBuilder;
-    protected SortOrderBuilder $sortOrderBuilder;
-    protected Image $image;
-    protected StockItemRepository $stockItemRepository;
+    private ProductRepositoryInterface $productRepository;
+    private Status $productStatus;
+    private SearchCriteriaBuilder $searchCriteriaBuilder;
+    private SortOrderBuilder $sortOrderBuilder;
+    private Image $image;
+    private StockItemRepository $stockItemRepository;
+    private \Magento\Framework\Pricing\Helper\Data $price;
 
     /**
      * @param ProductRepositoryInterface $productRepository
@@ -39,7 +40,8 @@ class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
         SearchCriteriaBuilder $searchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder,
         Image $image,
-        StockItemRepository $stockItemRepository
+        StockItemRepository $stockItemRepository,
+        \Magento\Framework\Pricing\Helper\Data $price
     ) {
         $this->productRepository = $productRepository;
         $this->productStatus = $productStatus;
@@ -47,8 +49,12 @@ class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->image = $image;
         $this->stockItemRepository = $stockItemRepository;
+        $this->price = $price;
     }
 
+    /**
+     * @throws NoSuchEntityException
+     */
     public function getProducts(ProductRangeInterface $productRange): array
     {
         $sortOrder = $this->sortOrderBuilder->setField('price')
@@ -72,7 +78,7 @@ class ProductList implements \Cardoso\CustomerProducts\Api\ProductList
             $stock = $this->stockItemRepository->get($item->getId());
             $responseData[] = [
                 'sku' => $item->getSku(),
-                'price'=> $item->getPrice(),
+                'price'=> $this->price->currency($item->getPrice(), true, false),
                 'image' => $mageUrl,
                 'quantity' => $stock->getQty(),
                 'description' => $item->getName(),
