@@ -1,14 +1,19 @@
 {
   "name": "cardoso/module-customer-extension",
-  "version": "1.0.0",
   "description": "N/A",
   "type": "magento2-module",
-  "require": {
-    "magento/framework": "*",
-    "magento/module-customer": "103.0.*"
-  },
+  "version": "1.0.1",
   "license": [
-    "Proprietary"
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Anderson Cardoso",
+      "email": "andersoncardo@gmail.com",
+      "homepage": "https://www.linkedin.com/in/andersoncardo/",
+      "role": "Leader"
+    }
   ],
   "autoload": {
     "files": [
