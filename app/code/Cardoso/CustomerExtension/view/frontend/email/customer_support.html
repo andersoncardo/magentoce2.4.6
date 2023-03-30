@@ -1,0 +1,24 @@
+<!--@subject {{trans "Client Support"}} @-->
+<!--@vars {} @-->
+
+{{template config_path="design/email/header_template"}}
+Hello,
+<p class="greeting">
+    We would like to warning that the mentioned client below, has been edited by script, this happened because there were blank spaces in the first name.
+</p>
+
+
+<table border="1">
+    <tr>
+        <td><strong>Customer Name:</strong></td>
+        <td>{{trans "%name," name=$customerFirstname}} {{trans "%lastname," lastname=$customerLastname}}</td>
+    </tr>
+    <tr>
+        <td><strong>Customer Email:</strong></td>
+        <td>{{trans "%mail," mail=$customerEmail}} </td>
+    </tr>
+</table>
+
+Best regards,
+
+{{template config_path="design/email/footer_template"}}

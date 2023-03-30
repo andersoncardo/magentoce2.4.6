@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="emails_new_user_created_with_white_spaces_fixed" label="Customer Support" file="customer_support.html" type="html"
+              module="Cardoso_CustomerExtension" area="frontend"/>
+</config>
